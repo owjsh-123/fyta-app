@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fyta">
+<meta name="theme-color" content="#111111">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="fyta-logo-180.png">
+<title>Fyta</title>
+<meta name="app-version" content="2026.10.05-cloudflare-v1">
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--tx:#111;--mu:#77756e;--bd:#e9e6de;--ac:#111;--acx:#fff;--p:#e0533d;--c:#e8a23a;--f:#3d8bd9;--g:#3fae6a}
+@media(prefers-color-scheme:dark){:root{--bg:#0f0f0e;--card:#1b1b19;--tx:#f1efe8;--mu:#96948b;--bd:#2c2c29;--ac:#f1efe8;--acx:#111}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 -apple-system,system-ui,sans-serif;padding-top:env(safe-area-inset-top)}
+main{max-width:480px;margin:0 auto;padding:14px 14px 110px}
+.card{background:var(--card);border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+h1{font-size:26px;margin:4px 0 12px;letter-spacing:-.02em}h2{font-size:13px;margin:0 0 10px;color:var(--mu);text-transform:uppercase;letter-spacing:.05em}
+button,input,textarea,select{font:inherit;color:inherit}
+button{border:0;background:var(--bg);border-radius:999px;padding:12px 16px}
+button.pri{background:var(--ac);color:var(--acx);font-weight:600}
+button.sm{padding:6px 12px;font-size:13px}button:disabled{opacity:.5}
+input,textarea,select{width:100%;border:1px solid var(--bd);background:var(--bg);border-radius:14px;padding:11px;font-size:16px}
+label{font-size:12px;color:var(--mu);display:block;margin:0 0 3px}
+.mu{color:var(--mu);font-size:13px}.hide{display:none}
+.strip{display:flex;gap:6px;margin-bottom:12px}
+.strip button{flex:1;padding:8px 0;border-radius:16px;background:var(--card);font-size:12px;color:var(--mu)}
+.strip button b{display:block;font-size:16px;color:var(--tx)}.strip button.on{background:var(--ac)}.strip button.on,.strip button.on b{color:var(--acx)}
+.ringw{position:relative;flex:none}.ringi{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.1}
+.big b{font-size:44px;letter-spacing:-.03em}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.g3 .card{margin:0;padding:12px 8px;text-align:center}.g3 b{font-size:18px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.bar{height:8px;background:var(--bd);border-radius:9px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;border-radius:9px;background:var(--g)}
+.item{padding:10px 0;border-top:1px solid var(--bd)}.item:first-of-type{border-top:0}
+.tag{display:inline-block;font-size:11px;background:var(--bg);border-radius:9px;padding:2px 8px;color:var(--mu);margin-bottom:3px}
+img.pv{width:100%;max-height:220px;object-fit:cover;border-radius:14px;margin-bottom:10px}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);display:flex;justify-content:space-around;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+nav button{background:none;font-size:11px;color:var(--mu);padding:4px 2px;border-radius:12px;flex:1;min-width:0}nav button.on{color:var(--tx);font-weight:700}
+nav span{display:block;font-size:20px}
+.hist{display:flex;gap:6px;align-items:flex-end;height:70px}.hist div{flex:1;text-align:center;font-size:11px;color:var(--mu)}
+.hist i{display:block;background:var(--ac);border-radius:5px 5px 0 0;margin-bottom:3px}.hist i.o{background:var(--p)}
+
+
+.recipe-modal{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;padding:14px}
+.recipe-modal.hide{display:none}.recipe-sheet{background:var(--card);width:min(520px,100%);max-height:88vh;overflow:auto;border-radius:24px;padding:18px}.recipe-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.recipe-sheet ul,.recipe-sheet ol{padding-left:22px}.recipe-sheet li{margin:5px 0}
+.coachbox{background:linear-gradient(135deg,var(--card),var(--bg));border:1px solid var(--bd)}
+.coach-action{padding:10px 0;border-top:1px solid var(--bd)}.coach-action:first-child{border-top:0}.coach-action b{display:block;margin-bottom:2px}
+.exercise-row{display:grid;grid-template-columns:1.7fr .65fr .65fr .8fr auto;gap:6px;align-items:end;padding:9px 0;border-top:1px solid var(--bd)}.exercise-row:first-child{border-top:0}.exercise-row input{padding:9px 8px}.exercise-row button{padding:9px 10px}
+.workout-pill{display:inline-block;padding:5px 9px;border-radius:999px;background:var(--bg);font-size:12px;margin:2px 4px 2px 0}
+@media(max-width:380px){.exercise-row{grid-template-columns:1fr 1fr}.exercise-row .ex-name{grid-column:1/-1}.exercise-row button{grid-column:2}}
+.ex-search{margin-bottom:10px}.filter-row{display:flex;gap:7px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}.filter-row::-webkit-scrollbar{display:none}.filter-row button{padding:8px 11px;white-space:nowrap;font-size:12px}.filter-row button.on{background:var(--ac);color:var(--acx)}
+.ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ex-card{border:1px solid var(--bd);background:var(--bg);border-radius:18px;padding:10px;text-align:left;min-height:186px;display:flex;flex-direction:column;gap:6px}.ex-card .thumb{position:relative;height:104px;border-radius:14px;background:#131313;display:flex;align-items:center;justify-content:center;overflow:hidden}.ex-card .thumb:after{content:"Real form demo";position:absolute;left:8px;bottom:8px;font-size:10px;background:rgba(255,255,255,.14);backdrop-filter:blur(4px);color:#fff;padding:4px 7px;border-radius:999px}.ex-card svg,.ex-card video{width:100%;height:100%;display:block}.ex-card video{object-fit:cover;background:#111}.ex-fallback{position:absolute;inset:0;display:flex}.ex-card b{font-size:14px;display:block;line-height:1.25}.ex-card .mu{font-size:11px;margin-top:1px}.ex-card .tiny{font-size:10px;color:var(--mu)}.ex-empty{grid-column:1/-1;padding:18px 4px;text-align:center}
+.exercise-modal{position:fixed;inset:0;z-index:9997;background:rgba(0,0,0,.58);display:flex;align-items:flex-end;justify-content:center;padding:14px}.exercise-modal.hide{display:none}.exercise-sheet{background:var(--card);width:min(560px,100%);max-height:90vh;overflow:auto;border-radius:25px;padding:18px}.exercise-hero{position:relative;height:240px;border-radius:20px;background:#111;display:flex;align-items:center;justify-content:center;margin:10px 0 14px;overflow:hidden}.exercise-hero:after{content:"Real person demo";position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.16);backdrop-filter:blur(4px);color:#fff;padding:6px 10px;border-radius:999px;font-size:11px}.exercise-hero svg,.exercise-hero video{width:100%;height:100%;display:block}.exercise-hero video{object-fit:cover;background:#111}.exercise-hero .ex-fallback{position:absolute;inset:0;display:flex}.ex-meta{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}.ex-meta span{font-size:12px;background:var(--bg);padding:5px 9px;border-radius:999px}.exercise-sheet ol,.exercise-sheet ul{padding-left:22px}.exercise-sheet li{margin:6px 0}.section-title{font-size:13px;font-weight:700;margin:14px 0 4px}
+/* Focused in-app camera for dish / barcode / Nutrition Facts capture */
+.cam-modal{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column}
+.cam-modal.hide{display:none}
+.cam-top{display:flex;align-items:center;justify-content:space-between;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;color:#fff;background:rgba(0,0,0,.65)}
+.cam-title{font-weight:700}.cam-hint{font-size:12px;opacity:.82;text-align:center;max-width:230px}
+.cam-stage{position:relative;flex:1;overflow:hidden;background:#000}
+.cam-stage video{width:100%;height:100%;object-fit:cover;display:block}
+.cam-shade{position:absolute;inset:0;background:rgba(0,0,0,.38);pointer-events:none}
+.cam-guide{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:3px solid #fff;border-radius:18px;box-shadow:0 0 0 9999px rgba(0,0,0,.28);pointer-events:none}
+.cam-guide.barcode{width:86%;height:24%;border-radius:12px}
+.cam-guide.label{width:76%;height:62%;border-radius:18px}
+.cam-guide.dish{width:88%;height:58%;border-radius:22px}
+.cam-guide:before,.cam-guide:after{content:'';position:absolute;width:34px;height:34px;border-color:#73ff91;border-style:solid}
+.cam-guide:before{left:-3px;top:-3px;border-width:5px 0 0 5px;border-radius:12px 0 0 0}
+.cam-guide:after{right:-3px;bottom:-3px;border-width:0 5px 5px 0;border-radius:0 0 12px 0}
+.cam-bottom{padding:14px 18px calc(14px + env(safe-area-inset-bottom));background:rgba(0,0,0,.82);display:flex;gap:12px;align-items:center;justify-content:center}
+.cam-bottom button{min-width:92px}.cam-capture{width:72px!important;height:72px!important;min-width:72px!important;border-radius:50%!important;background:#fff!important;border:6px solid #bbb!important;padding:0!important}
+.cam-note{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,.58);padding:7px 11px;border-radius:999px;font-size:12px;white-space:nowrap;pointer-events:none}
+</style>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/png" sizes="192x192" href="fyta-logo-192.png">
+</head><body><main>
+
+<!-- ONBOARDING -->
+<section id="v-ob" class="hide">
+<h1>Let's build your plan</h1>
+<div class="card">
+<label>My goal</label><select id="o-goal"><option value="lose">Lose weight</option><option value="maintain">Maintain weight</option><option value="gain">Gain weight</option></select>
+<div class="g2" style="margin-top:10px"><div><label>Sex</label><select id="o-sex"><option value="m">Male</option><option value="f">Female</option></select></div><div><label>Age</label><input id="o-age" type="number" inputmode="numeric"></div></div>
+<div class="g2"><div><label>Height (cm)</label><input id="o-h" type="number" inputmode="decimal"></div><div><label>Weight (kg)</label><input id="o-w" type="number" inputmode="decimal"></div></div>
+<div class="g2"><div><label>Goal weight (kg)</label><input id="o-gw" type="number" inputmode="decimal"></div><div><label>Pace (kg / week)</label><select id="o-pace"><option value=".25">0.25 – gentle</option><option value=".5" selected>0.5 – steady</option><option value=".75">0.75 – fast</option></select></div></div>
+<label>Activity level</label><select id="o-act"><option value="1.2">Mostly sitting</option><option value="1.375" selected>Light (1–3 workouts/wk)</option><option value="1.55">Moderate (3–5/wk)</option><option value="1.725">Very active (6–7/wk)</option></select>
+<button class="pri" id="o-go" style="width:100%;margin-top:14px">Build my plan</button>
+<div id="o-err" class="mu" style="margin-top:8px"></div></div>
+<div id="o-res" class="card hide"></div>
+</section>
+
+<!-- TODAY -->
+<section id="v-home">
+<div class="row" style="margin:2px 2px 10px"><div><div class="fyta-brand" style="font-size:24px;font-weight:800;letter-spacing:-.04em">Fyta</div><div class="mu">Eat. Train. Progress.</div></div><span class="tag">AI coach</span></div>
+<div class="strip" id="strip"></div>
+<div class="card row"><div class="big"><b id="left">0</b><br><span class="mu" id="ll">Calories left</span></div><div id="cring"></div></div>
+<div class="g3" id="macs"></div>
+
+<div class="card"><h2>Quick actions</h2>
+<div class="g3" style="margin-bottom:0"><button class="pri" id="goLog">＋ Log food</button><button id="goMeals">🍽 Plan meals</button><button id="goGym">🏋️ Gym</button></div>
+</div>
+<div class="card coachbox"><div class="row"><div><h2 style="margin:0 0 5px">✨ AI Daily Coach</h2><b style="font-size:18px">Fix My Day</b></div><span class="tag">Adaptive</span></div>
+<div class="mu" style="margin:7px 0 10px">Looks at today's food, macros left, steps, gym workout, goal and preferences — then tells you the best next moves.</div>
+<button class="pri" id="fixDay" style="width:100%">✨ Fix my day</button><div id="fixStatus" class="mu" style="margin-top:8px"></div><div id="fixOut"></div></div>
+
+<div class="card"><h2>Steps</h2>
+<div class="row"><b id="stv" style="font-size:22px">0</b><span class="mu" id="stg"></span></div><div class="bar"><i id="stb"></i></div>
+<div class="row"><input id="sti" type="number" inputmode="numeric" placeholder="Enter today's steps"><button class="pri" id="sts">Save</button></div>
+<div class="mu" style="margin-top:8px">For now, copy your steps from Apple Health / Google Fit. Turn on step calories in Settings if you want them added to your calorie budget.</div></div>
+
+<div class="card"><div class="row"><h2 style="margin:0">Today's food</h2><button class="sm" id="goLog2">＋ Add</button></div><div id="log" style="margin-top:8px"></div></div>
+</section>
+
+<!-- LOG FOOD -->
+<section id="v-log" class="hide">
+<h1>Log food</h1>
+<div class="card"><h2>How do you want to log?</h2>
+<div class="g4" style="margin-bottom:10px">
+<button id="dishMode" class="pri" type="button">📷<br>Dish</button>
+<button id="barcodeMode" type="button">▦<br>Barcode</button>
+<button id="labelMode" type="button">🏷️<br>Label</button>
+<button id="manualMode" type="button">✏️<br>Manual</button>
+</div>
+<img id="pv" class="pv hide" alt="">
+<textarea id="desc" rows="2" placeholder="What did you eat? (optional if you add a photo)"></textarea>
+<div class="row" style="margin-top:8px">
+<button id="pb" type="button">📷 Take photo</button>
+<button id="gb" type="button">🖼️ Choose photo</button>
+<input id="file" type="file" accept="image/*" class="hide">
+<input id="cameraFile" type="file" accept="image/*" capture="environment" class="hide">
+</div>
+<button class="pri" id="est" style="width:100%;margin-top:8px">Estimate dish</button>
+<div id="st" class="mu" style="margin-top:8px">Dish mode: take a photo of your meal. Use Barcode for packaged products or Label for a nutrition facts panel.</div>
+<div id="edit" class="hide"><input id="n" placeholder="Name" style="margin:10px 0 8px">
+<div class="g4"><div><label>kcal</label><input id="k" type="number" inputmode="decimal"></div><div><label>protein</label><input id="pr" type="number" inputmode="decimal"></div><div><label>carbs</label><input id="ca" type="number" inputmode="decimal"></div><div><label>fat</label><input id="fa" type="number" inputmode="decimal"></div></div>
+<div class="mu" id="items" style="margin:8px 0"></div>
+<div class="row"><input id="fix" placeholder="Correct it: e.g. 2 tbsp oil"><button id="rf">Redo</button></div>
+<button class="pri" id="add" style="width:100%;margin-top:10px">Add to today's log</button></div>
+<button class="sm" id="man" style="margin-top:8px">Enter manually</button></div>
+</section>
+
+<!-- MEALS -->
+<section id="v-meals" class="hide">
+<h1>Meals</h1>
+<div class="card"><h2>Plan the rest of my day</h2>
+<div class="mu" style="margin-bottom:10px">AI uses what you have left today and your saved food preferences.</div>
+<button class="pri" id="plan" style="width:100%">Plan my remaining meals</button>
+<div id="pst" class="mu" style="margin-top:8px"></div><div id="plist"></div></div>
+
+<div class="card"><h2>I know what I want</h2>
+<div class="mu" style="margin-bottom:8px">Describe the food you're craving and AI will build one dish around your remaining calories and macros.</div>
+<textarea id="wantEat" rows="3" placeholder="e.g. chicken breast and fries with sauces, a sweet high-protein snack, or a halal burger"></textarea>
+<button class="pri" id="tailor" style="width:100%;margin-top:8px">Create a dish for what I want</button>
+<div id="tst" class="mu" style="margin-top:8px"></div>
+<div id="tailorOut"></div>
+</div>
+</section>
+
+<!-- GYM -->
+<section id="v-gym" class="hide">
+<h1>Gym</h1>
+<div class="card"><div class="row"><div><h2 style="margin:0 0 4px">Today's workout</h2><b id="gymTodayTitle">No workout logged</b></div><span id="gymTodayTag" class="tag">Rest day</span></div><div id="gymToday" class="mu" style="margin-top:8px"></div></div>
+
+<div class="card" id="exerciseLibraryCard"><div class="row"><div><h2 style="margin:0 0 4px">Exercise library</h2><b>Choose an exercise</b></div><span class="tag">How-to guides</span></div>
+<div class="mu" style="margin:6px 0 10px">Search by exercise or muscle. Tap one to watch a real-person form demo, see instructions, common mistakes and an alternative.</div>
+<input id="exSearch" class="ex-search" placeholder="Search exercises, e.g. bench, chest, squat">
+<div id="exFilters" class="filter-row"></div>
+<div id="exGrid" class="ex-grid"></div></div>
+
+<div class="card"><h2>Log a workout</h2>
+<div class="g2"><div><label>Workout</label><select id="gymType"><option>Push</option><option>Pull</option><option>Legs</option><option>Upper</option><option>Lower</option><option>Full body</option><option>Cardio</option><option>Other</option></select></div><div><label>Duration (min)</label><input id="gymDur" type="number" inputmode="numeric" placeholder="60"></div></div>
+<label>Optional note</label><input id="gymNote" placeholder="e.g. heavy leg day, felt strong">
+<div style="margin-top:14px"><div class="row"><h2 style="margin:0">Exercises</h2><button id="addExercise" class="sm">＋ Choose exercise</button></div><div id="exerciseList"></div></div>
+<button class="pri" id="finishWorkout" style="width:100%;margin-top:12px">Save workout</button><div id="gymStatus" class="mu" style="margin-top:8px"></div></div>
+<div class="card"><h2>Recent workouts</h2><div id="gymHistory"></div></div>
+</section>
+
+<!-- PROGRESS -->
+<section id="v-prog" class="hide">
+<h1>Progress</h1>
+<div class="card" id="pcard"></div>
+<div class="card"><h2>Log weight (kg)</h2><div class="row"><input id="wi" type="number" inputmode="decimal" placeholder="Today's weight"><button class="pri" id="ws">Save</button></div></div>
+<div class="card"><h2>Calories, last 7 days</h2><div class="hist" id="hist"></div></div>
+<div class="card"><h2>Weekly summary</h2><div id="weekly"></div></div>
+</section>
+
+<!-- SETTINGS -->
+<section id="v-set" class="hide">
+<h1>Settings</h1>
+<div class="card"><h2>Personal profile</h2><div id="profileSummary" class="mu"></div><button id="editProfile" style="width:100%;margin-top:10px">Edit profile & recalculate plan</button></div>
+<div class="card"><h2>Daily goals</h2><div class="g4">
+<div><label>kcal</label><input id="gk" type="number"></div><div><label>protein</label><input id="gp" type="number"></div><div><label>carbs</label><input id="gc" type="number"></div><div><label>fat</label><input id="gf" type="number"></div></div>
+<button id="redo" style="width:100%;margin-top:12px">Redo my plan from scratch</button></div>
+<div class="card"><h2>Steps</h2><label>Daily step goal</label><input id="sg" type="number">
+<label style="margin-top:10px;display:flex;gap:8px;align-items:center;font-size:14px;color:var(--tx)"><input id="sa" type="checkbox" style="width:auto"> Add step calories (≈0.04 kcal/step) to my budget</label></div>
+<div class="card"><h2>Food preferences</h2><textarea id="prefs" rows="4" placeholder="e.g. halal, no dairy, love chicken and rice, cheap meals, foods I dislike, allergies"></textarea></div>
+<div class="card"><h2>AI food analysis</h2><div class="mu">AI is connected securely through this app. No API key is needed on this phone. Food-photo analysis is restricted to food only.</div></div><div class="card"><h2>App version</h2><div class="mu">2026.09.30-v7 · Fyta · Today, Log, Meals, Gym, Progress and Settings are included.</div></div>
+</section>
+<div id="recipeModal" class="recipe-modal hide" aria-hidden="true"><div class="recipe-sheet"><div class="recipe-head"><div><span class="tag">Custom dish</span><h1 id="recipeTitle" style="margin-top:6px"></h1></div><button id="recipeClose" class="sm">✕</button></div><div id="recipeBody"></div><button id="recipeLog" class="pri" style="width:100%;margin-top:12px">Log this meal</button></div></div>
+<div id="exerciseModal" class="exercise-modal hide" aria-hidden="true"><div class="exercise-sheet"><div class="recipe-head"><div><span id="exDetailGroup" class="tag">Exercise</span><h1 id="exDetailName" style="margin:6px 0 0"></h1></div><button id="exDetailClose" class="sm">✕</button></div><div id="exDetailHero" class="exercise-hero"></div><div id="exDetailBody"></div><button id="exDetailAdd" class="pri" style="width:100%;margin-top:12px">＋ Add to workout</button></div></div>
+
+<!-- FOCUSED CAMERA -->
+<div id="camModal" class="cam-modal hide" aria-hidden="true">
+  <div class="cam-top">
+    <button id="camClose" type="button" style="background:rgba(255,255,255,.14);color:#fff">✕</button>
+    <div style="text-align:center"><div id="camTitle" class="cam-title">Take photo</div><div id="camHint" class="cam-hint">Keep the target inside the guide</div></div>
+    <button id="camFlip" type="button" style="background:rgba(255,255,255,.14);color:#fff">↺</button>
+  </div>
+  <div id="camStage" class="cam-stage">
+    <video id="camVideo" autoplay playsinline muted></video>
+    <div id="camGuide" class="cam-guide dish"></div>
+    <div id="camNote" class="cam-note">Hold steady</div>
+  </div>
+  <div class="cam-bottom">
+    <button id="camGallery" type="button" style="background:#252525;color:#fff">Gallery</button>
+    <button id="camCapture" class="cam-capture" type="button" aria-label="Take photo"></button>
+    <button id="camTorch" type="button" style="background:#252525;color:#fff">Flash</button>
+  </div>
+</div>
+
+<nav id="nav"><button data-t="home"><span>🏠</span>Today</button><button data-t="log"><span>📷</span>Log</button><button data-t="meals"><span>🍽️</span>Meals</button><button data-t="gym"><span>🏋️</span>Gym</button><button data-t="prog"><span>📈</span>Progress</button><button data-t="set"><span>⚙️</span>Settings</button></nav>
+
+<script>
+const $=i=>document.getElementById(i),KEY="macros-v1",PROFILE_KEY="macros-profile-v1";
+const defaults=()=>({goals:{k:2200,p:160,c:220,f:70},days:{},profile:null,steps:{},weights:[],plan:{},tailored:{},workouts:{},coach:{},prefs:"",stepAdj:false,stepGoal:10000,_updatedAt:0});
+let S=defaults();
+// LocalStorage is the fast primary store. The separate profile key protects the
+// onboarding details even if the main state ever becomes corrupted.
+try{
+ const raw=JSON.parse(localStorage.getItem(KEY)||"{}");
+ Object.assign(S,raw);
+ if("pass" in S)delete S.pass; // remove legacy browser-stored API key
+ if(!S.profile){const p=JSON.parse(localStorage.getItem(PROFILE_KEY)||"null");if(p)S.profile=p}
+}catch(e){}
+
+// IndexedDB is a second, more durable copy (especially useful for installed PWAs on iPhone).
+const DB_NAME="macros-db",DB_STORE="state";
+function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(DB_NAME,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(DB_STORE))r.result.createObjectStore(DB_STORE)};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+async function idbGet(){try{const db=await openDB();return await new Promise((resolve,reject)=>{const tx=db.transaction(DB_STORE,"readonly"),r=tx.objectStore(DB_STORE).get(KEY);r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error)})}catch(e){return null}}
+async function idbSet(v){try{const db=await openDB();await new Promise((resolve,reject)=>{const tx=db.transaction(DB_STORE,"readwrite");tx.objectStore(DB_STORE).put(v,KEY);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}catch(e){}}
+const save=()=>{
+ S._updatedAt=Date.now();
+ try{localStorage.setItem(KEY,JSON.stringify(S));if(S.profile)localStorage.setItem(PROFILE_KEY,JSON.stringify(S.profile))}catch(e){}
+ idbSet(S);
+};
+const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const R=Math.round,sum=a=>a.reduce((t,m)=>({k:t.k+m.k,p:t.p+m.p,c:t.c+m.c,f:t.f+m.f}),{k:0,p:0,c:0,f:0});
+let cur=new Date(),img=null,last=null,tab="ob",draft=null,scanMode="dish";
+const day=()=>S.days[iso(cur)]||(S.days[iso(cur)]=[]);
+const workoutDay=()=>S.workouts[iso(cur)]||(S.workouts[iso(cur)]=[]);
+let gymDraft=[];
+function todayWorkoutSummary(){const a=S.workouts[iso(cur)]||[];if(!a.length)return "No gym workout logged today";return a.map(w=>`${w.type} ${w.duration||0} min — ${(w.exercises||[]).map(e=>`${e.name}: ${e.sets}x${e.reps}${e.weight?` @ ${e.weight}kg`:""}`).join(", ")||"no exercises"}`).join(" | ")}
+const ring=(pct,sz,sw,col,html)=>{const r=(sz-sw)/2,c=2*Math.PI*r,o=c*(1-Math.min(1,Math.max(0,pct)));return `<div class="ringw" style="width:${sz}px;height:${sz}px"><svg width="${sz}" height="${sz}" style="transform:rotate(-90deg)"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="var(--bd)" stroke-width="${sw}"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${o}"/></svg><div class="ringi">${html}</div></div>`};
+
+/* ---------- plan calculation ---------- */
+function calc(p){
+ const bmr=10*p.w+6.25*p.h-5*p.age+(p.sex==="m"?5:-161),tdee=bmr*p.act;
+ const dir=p.goal==="lose"?-1:p.goal==="gain"?1:0;
+ const k=Math.max(p.sex==="m"?1500:1200,R(tdee+dir*p.pace*1100));
+ const pr=R(p.w*(p.goal==="lose"?2:1.8)),f=R(k*.25/9),c=Math.max(50,R((k-pr*4-f*9)/4));
+ const wks=dir?Math.abs(p.w-p.gw)/p.pace:0,dt=new Date();dt.setDate(dt.getDate()+R(wks*7));
+ return{k,p:pr,c,f,tdee:R(tdee),wks:Math.ceil(wks),date:dt};
+}
+function fillOb(){
+ let p=S.profile||{};
+ if(!S.profile){try{p=JSON.parse(localStorage.getItem("macros-onboarding-draft")||"{}")||{}}catch(e){p={}}}
+ const m={goal:p.goal,sex:p.sex,age:p.age,h:p.h,w:p.w,gw:p.gw,pace:p.pace,act:p.act};
+ for(const[k,v]of Object.entries(m))if(v!=null)$("o-"+k).value=v
+}
+for(const id of["goal","sex","age","h","w","gw","pace","act"]){
+ $("o-"+id).addEventListener("input",()=>{try{localStorage.setItem("macros-onboarding-draft",JSON.stringify({goal:$("o-goal").value,sex:$("o-sex").value,age:+$("o-age").value||"",h:+$("o-h").value||"",w:+$("o-w").value||"",gw:+$("o-gw").value||"",pace:+$("o-pace").value,act:+$("o-act").value}))}catch(e){}})
+}
+$("o-go").onclick=()=>{
+ const p={goal:$("o-goal").value,sex:$("o-sex").value,age:+$("o-age").value,h:+$("o-h").value,w:+$("o-w").value,gw:+$("o-gw").value,pace:+$("o-pace").value,act:+$("o-act").value};
+ if(!(p.age>10&&p.h>100&&p.w>30&&p.gw>30)){$("o-err").textContent="Fill in age, height, weight and goal weight.";return}
+ if(p.goal==="lose"&&p.gw>=p.w||p.goal==="gain"&&p.gw<=p.w){$("o-err").textContent="Goal weight doesn't match your goal.";return}
+ $("o-err").textContent="";draft={p,r:calc(p)};const r=draft.r;
+ $("o-res").classList.remove("hide");
+ $("o-res").innerHTML=`<h2>Your daily targets</h2><div class="big" style="text-align:center"><b>${r.k}</b><br><span class="mu">calories / day</span></div>
+ <div class="g3" style="margin:12px 0"><div class="card" style="background:var(--bg)"><b>${r.p}g</b><br><span class="mu">Protein</span></div><div class="card" style="background:var(--bg)"><b>${r.c}g</b><br><span class="mu">Carbs</span></div><div class="card" style="background:var(--bg)"><b>${r.f}g</b><br><span class="mu">Fat</span></div></div>
+ <div class="mu">${p.goal==="maintain"?"Maintenance calories.":`At ${p.pace} kg/week you'd reach ${p.gw} kg in about <b>${r.wks} weeks</b> (${r.date.toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"})}).`} Estimates use the Mifflin-St Jeor formula, so treat them as a starting point and adjust after 2–3 weeks.</div>
+ <button class="pri" id="o-ok" style="width:100%;margin-top:12px">Start tracking</button>`;
+ $("o-ok").onclick=()=>{S.profile=draft.p;S.goals={k:r.k,p:r.p,c:r.c,f:r.f};
+  if(!S.weights.length)S.weights.push({d:iso(new Date()),w:p.w});try{localStorage.removeItem("macros-onboarding-draft")}catch(e){}save();tab="home";render()};
+};
+$("redo").onclick=()=>{tab="ob";$("o-res").classList.add("hide");render()};
+
+/* ---------- AI through secure Netlify Function ---------- */
+async function ai(task,payload={}){
+ const r=await fetch("/api/gemini",{
+  method:"POST",
+  headers:{"content-type":"application/json"},
+  body:JSON.stringify({task,...payload})
+ });
+ const d=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(d.error||`AI request failed (${r.status}).`);
+ if(!d.result||typeof d.result!=="object")throw new Error("AI returned no usable result.");
+ return d.result;
+}
+
+function setScanMode(mode){
+ scanMode=mode;
+ for(const [id,m] of [["dishMode","dish"],["barcodeMode","barcode"],["labelMode","label"]])$(id).classList.toggle("pri",m===mode);
+ $("est").textContent=mode==="barcode"?"Scan barcode":mode==="label"?"Read label":"Estimate dish";
+ $("desc").placeholder=mode==="barcode"?"Product name (optional)":mode==="label"?"Product name or serving eaten (optional)":"What did you eat? (optional if you add a photo)";
+ $("st").textContent=mode==="barcode"?"Barcode mode: photograph the barcode clearly and fill most of the frame.":mode==="label"?"Label mode: photograph the Nutrition Facts panel straight-on so the numbers are readable.":"Dish mode: take a photo of your meal.";
+}
+$("dishMode").onclick=()=>setScanMode("dish");
+$("barcodeMode").onclick=async()=>{setScanMode("barcode");await startCamera()};
+$("labelMode").onclick=async()=>{setScanMode("label");await startCamera()};
+$("manualMode").onclick=()=>{setScanMode("dish");showEdit();$("st").textContent="Enter the nutrition values manually, then add to today's log."};
+
+async function run(extra={}){
+ const d=$("desc").value.trim();if(!d&&!img){$("st").textContent="Add a photo or description.";return}
+ const task=scanMode==="barcode"?"barcode":scanMode==="label"?"nutritionLabel":"nutrition";
+ $("st").textContent=scanMode==="barcode"?"Reading barcode…":scanMode==="label"?"Reading nutrition label…":"Analyzing dish…";$("est").disabled=$("rf").disabled=true;
+ try{
+  const j=await ai(task,{image:img||null,description:d||"",previous:extra.previous||null,correction:extra.correction||""});
+  if(!j||typeof j!=="object")throw new Error("No nutrition result returned.");
+  last=j;showEdit(j);
+  const prefix=scanMode==="barcode"&&j.barcode?`Barcode ${j.barcode}: `:scanMode==="label"?"Label read: ":"Estimated: ";
+  $("st").textContent=`${prefix}${R(+j.kcal||0)} kcal · P${R(+j.protein_g||0)} C${R(+j.carbs_g||0)} F${R(+j.fat_g||0)}. Check serving/portion, then add.`
+ }
+ catch(e){$("st").textContent="Error: "+e.message}
+ $("est").disabled=$("rf").disabled=false}
+$("est").onclick=async()=>{
+ if((scanMode==="barcode"||scanMode==="label")&&!img){
+  await startCamera();
+  return;
+ }
+ run({});
+};
+$("rf").onclick=()=>{const c=$("fix").value.trim();if(c&&last)run({previous:last,correction:c})};
+
+/* ---------- meal ideas ---------- */
+$("plan").onclick=async()=>{
+ const g=S.goals,t=sum(S.days[iso(cur)]||[]),burn=S.stepAdj?R((S.steps[iso(cur)]||0)*.04):0;
+ const rem={k:g.k+burn-t.k,p:g.p-t.p,c:g.c-t.c,f:g.f-t.f};
+ if(rem.k<150){$("pst").textContent="You've basically hit your calories for today. 🎉";return}
+ const now=new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+ const eaten=(S.days[iso(cur)]||[]).map(m=>m.n).join(", ")||"nothing yet";
+ $("pst").textContent="Planning…";$("plan").disabled=true;
+ try{const j=await ai("mealPlan",{remaining:{k:R(rem.k),p:R(rem.p),c:R(rem.c),f:R(rem.f)},currentTime:now,eaten,preferences:S.prefs||"none",workout:todayWorkoutSummary()});
+  if(!Array.isArray(j.meals)||!j.meals.length)throw new Error("No meal plan was returned.");
+  S.plan[iso(cur)]=j.meals;save();$("pst").textContent=`Planned ${j.meals.length} meal${j.meals.length===1?"":"s"} for what you have left.`;render()}
+ catch(e){$("pst").textContent="Error: "+e.message}
+ $("plan").disabled=false};
+$("plist").onclick=e=>{const i=e.target.dataset.l;if(i==null)return;const m=S.plan[iso(cur)][i];
+ day().push({n:m.name,k:m.kcal,p:m.protein_g,c:m.carbs_g,f:m.fat_g});S.plan[iso(cur)].splice(+i,1);save();render()};
+
+$("tailor").onclick=async()=>{
+ const wants=$("wantEat").value.trim();
+ if(!wants){$("tst").textContent="Describe what you want to eat first.";return}
+ const g=S.goals,t=sum(S.days[iso(cur)]||[]),burn=S.stepAdj?R((S.steps[iso(cur)]||0)*.04):0;
+ const rem={k:g.k+burn-t.k,p:g.p-t.p,c:g.c-t.c,f:g.f-t.f};
+ if(rem.k<120){$("tst").textContent="You don't have many calories left today, so a custom dish wouldn't make much sense.";return}
+ const eaten=(S.days[iso(cur)]||[]).map(m=>m.n).join(", ")||"nothing yet";
+ $("tst").textContent="Designing your dish…";$("tailor").disabled=true;
+ try{
+  const j=await ai("tailoredMeal",{remaining:{k:R(rem.k),p:R(rem.p),c:R(rem.c),f:R(rem.f)},request:wants,eaten,preferences:S.prefs||"none",workout:todayWorkoutSummary()});
+  if(!j||!j.meal||typeof j.meal!=="object")throw new Error("No custom dish was returned.");
+  S.tailored[iso(cur)]=j.meal;save();
+  $("tst").textContent="Custom dish ready.";render();
+ }catch(e){$("tst").textContent="Error: "+e.message}
+ $("tailor").disabled=false;
+};
+
+$("tailorOut").onclick=e=>{
+ const m=S.tailored[iso(cur)]; if(!m)return;
+ if(e.target.dataset.recipe==="1"){openRecipe(m);return}
+ if(e.target.dataset.tailorlog!=="1")return;
+ day().push({n:m.name,k:m.kcal,p:m.protein_g,c:m.carbs_g,f:m.fat_g});
+ delete S.tailored[iso(cur)]; save(); render();
+};
+function openRecipe(m){
+ $("recipeTitle").textContent=m.name||"Custom dish";
+ const ing=(m.ingredients||[]).map(x=>`<li>${esc(x)}</li>`).join("");
+ const steps=(m.instructions||[]).map(x=>`<li>${esc(x)}</li>`).join("");
+ $("recipeBody").innerHTML=`<div class="mu">${esc(m.desc||"")}</div><div style="margin:8px 0"><b>${R(m.kcal)} kcal · P${R(m.protein_g)} C${R(m.carbs_g)} F${R(m.fat_g)}</b></div>${m.why_match?`<div class="mu">${esc(m.why_match)}</div>`:""}${ing?`<h2 style="margin-top:16px">Ingredients</h2><ul>${ing}</ul>`:""}${steps?`<h2 style="margin-top:16px">How to make it</h2><ol>${steps}</ol>`:""}`;
+ $("recipeModal").classList.remove("hide");$("recipeModal").setAttribute("aria-hidden","false");
+}
+function closeRecipe(){$("recipeModal").classList.add("hide");$("recipeModal").setAttribute("aria-hidden","true")}
+$("recipeClose").onclick=closeRecipe;
+$("recipeModal").onclick=e=>{if(e.target===$("recipeModal"))closeRecipe()};
+$("recipeLog").onclick=()=>{const m=S.tailored[iso(cur)];if(!m)return;day().push({n:m.name,k:m.kcal,p:m.protein_g,c:m.carbs_g,f:m.fat_g});delete S.tailored[iso(cur)];save();closeRecipe();tab="home";render();scrollTo(0,0)};
+
+/* ---------- Fix My Day ---------- */
+$("fixDay").onclick=async()=>{
+ const g=S.goals,t=sum(S.days[iso(cur)]||[]),st=S.steps[iso(cur)]||0,burn=S.stepAdj?R(st*.04):0;
+ const rem={k:R(g.k+burn-t.k),p:R(g.p-t.p),c:R(g.c-t.c),f:R(g.f-t.f)};
+ const eaten=(S.days[iso(cur)]||[]).map(m=>`${m.n} (${R(m.k)} kcal)`).join(", ")||"nothing yet";
+ const p=S.profile||{};
+ $("fixStatus").textContent="Reading your day…";$("fixDay").disabled=true;
+ try{
+  const j=await ai("fixMyDay",{remaining:rem,eaten,steps:st,stepGoal:S.stepGoal,workout:todayWorkoutSummary(),preferences:S.prefs||"none",goal:p.goal||"maintain",currentTime:new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})});
+  S.coach[iso(cur)]=j;save();$("fixStatus").textContent="Your plan is updated for right now.";render();
+ }catch(e){$("fixStatus").textContent="Error: "+e.message}
+ $("fixDay").disabled=false;
+};
+$("fixOut").onclick=e=>{
+ const meal=e.target.dataset.coachmeal;
+ if(meal){$("wantEat").value=meal;tab="meals";render();scrollTo(0,0)}
+};
+
+/* ---------- exercise library ---------- */
+const EXERCISES=[
+ {id:"bench",video:"assets/exercises/bench.mp4",name:"Barbell Bench Press",group:"Chest",equipment:"Barbell + bench",art:"bench",steps:["Lie with eyes under the bar and feet planted.","Grip slightly wider than shoulder width and brace your upper back.","Lower the bar under control to mid-chest.","Press up and slightly back until the elbows are straight."],mistakes:["Bouncing the bar off the chest","Flaring elbows straight out","Lifting hips off the bench"],alt:"Dumbbell bench press"},
+ {id:"incline-db",video:"assets/exercises/incline-db.mp4",name:"Incline Dumbbell Press",group:"Chest",equipment:"Dumbbells + incline bench",art:"incline",steps:["Set the bench around 30–45°.","Start dumbbells beside the upper chest.","Press up while keeping shoulders down and back.","Lower slowly until elbows are just below the bench line."],mistakes:["Bench angle too steep","Shrugging shoulders","Dumbbells drifting too wide"],alt:"Incline chest press machine"},
+ {id:"chest-press",video:"assets/exercises/chest-press.mp4",name:"Chest Press Machine",group:"Chest",equipment:"Machine",art:"press",steps:["Adjust the seat so handles line up with mid-chest.","Keep back and head against the pad.","Press handles forward without locking aggressively.","Return slowly until you feel a chest stretch."],mistakes:["Seat too high or low","Shoulders rolling forward","Using momentum"],alt:"Push-up"},
+ {id:"cable-fly",video:"assets/exercises/cable-fly.mp4",name:"Cable Fly",group:"Chest",equipment:"Cable machine",art:"fly",steps:["Set handles around chest height and step forward.","Keep a soft bend in the elbows.","Sweep hands together in a wide arc.","Return slowly until the chest is stretched."],mistakes:["Turning it into a press","Overstretching shoulders","Moving too fast"],alt:"Pec deck"},
+ {id:"lat-pulldown",video:"assets/exercises/lat-pulldown.mp4",name:"Lat Pulldown",group:"Back",equipment:"Cable machine",art:"pulldown",steps:["Grip the bar just outside shoulder width.","Lean back slightly and lift the chest.","Pull elbows down toward your ribs.","Control the bar back overhead without shrugging."],mistakes:["Pulling behind the neck","Swinging the torso","Using only the arms"],alt:"Assisted pull-up"},
+ {id:"seated-row",video:"assets/exercises/seated-row.mp4",name:"Seated Cable Row",group:"Back",equipment:"Cable machine",art:"row",steps:["Sit tall with a neutral spine.","Start with arms long and shoulders relaxed.","Drive elbows back and squeeze shoulder blades.","Return under control without rounding."],mistakes:["Rocking back and forth","Shrugging","Rounding the lower back"],alt:"Chest-supported row"},
+ {id:"barbell-row",video:"assets/exercises/barbell-row.mp4",name:"Barbell Row",group:"Back",equipment:"Barbell",art:"hingerow",steps:["Hinge at the hips with a flat back.","Let the bar hang below the shoulders.","Pull the bar toward the lower ribs.","Lower with control while holding the hinge."],mistakes:["Standing up during each rep","Rounded back","Jerking the bar"],alt:"One-arm dumbbell row"},
+ {id:"pullup",video:"assets/exercises/pullup.mp4",name:"Pull-Up",group:"Back",equipment:"Pull-up bar",art:"pullup",steps:["Hang with hands just wider than shoulders.","Brace the core and pull shoulders away from ears.","Drive elbows down until chin reaches bar height.","Lower to a controlled full hang."],mistakes:["Kipping unintentionally","Half reps","Craning the neck"],alt:"Lat pulldown"},
+ {id:"shoulder-press",video:"assets/exercises/shoulder-press.mp4",name:"Dumbbell Shoulder Press",group:"Shoulders",equipment:"Dumbbells",art:"shoulder",steps:["Sit or stand tall with dumbbells at shoulder level.","Brace the core and keep ribs down.","Press overhead until arms are nearly straight.","Lower to shoulder level with control."],mistakes:["Overarching the lower back","Pressing too far behind the head","Shrugging hard"],alt:"Shoulder press machine"},
+ {id:"lateral-raise",video:"assets/exercises/lateral-raise.mp4",name:"Lateral Raise",group:"Shoulders",equipment:"Dumbbells",art:"lateral",steps:["Stand tall with light dumbbells at your sides.","Keep a small elbow bend.","Raise arms out to roughly shoulder height.","Lower slowly instead of dropping the weight."],mistakes:["Swinging the body","Going too heavy","Shrugging the traps"],alt:"Cable lateral raise"},
+ {id:"rear-delt",video:"assets/exercises/rear-delt.mp4",name:"Rear Delt Fly",group:"Shoulders",equipment:"Dumbbells / machine",art:"reardelt",steps:["Hinge forward or use a rear-delt machine.","Keep elbows softly bent.","Open arms wide while squeezing the rear shoulders.","Return slowly without rounding."],mistakes:["Pulling with the traps","Too much elbow bend","Using momentum"],alt:"Face pull"},
+ {id:"face-pull",video:"assets/exercises/face-pull.mp4",name:"Face Pull",group:"Shoulders",equipment:"Cable + rope",art:"facepull",steps:["Set rope around face height.","Pull the rope toward the forehead.","Separate the rope ends and rotate thumbs back.","Return with shoulders controlled."],mistakes:["Cable set too low","Leaning far backward","Elbows dropping"],alt:"Rear delt fly"},
+ {id:"squat",video:"assets/exercises/squat.mp4",name:"Barbell Back Squat",group:"Legs",equipment:"Barbell + rack",art:"squat",steps:["Set the bar securely across the upper back.","Stand about shoulder width and brace your core.","Sit down between the hips while knees track over toes.","Drive the floor away to stand tall."],mistakes:["Knees collapsing inward","Heels lifting","Losing a braced spine"],alt:"Goblet squat"},
+ {id:"leg-press",video:"assets/exercises/leg-press.mp4",name:"Leg Press",group:"Legs",equipment:"Leg press machine",art:"legpress",steps:["Place feet around shoulder width on the platform.","Lower the sled until knees bend comfortably.","Keep hips and lower back against the pad.","Push through the whole foot without hard knee lockout."],mistakes:["Lower back rounding off the pad","Knees collapsing inward","Locking knees aggressively"],alt:"Goblet squat"},
+ {id:"rdl",video:"assets/exercises/rdl.mp4",name:"Romanian Deadlift",group:"Legs",equipment:"Barbell / dumbbells",art:"hinge",steps:["Stand tall with the weight close to your thighs.","Push hips backward with a soft knee bend.","Lower until hamstrings are strongly stretched.","Drive hips forward to return to standing."],mistakes:["Turning it into a squat","Rounding the back","Weight drifting away from legs"],alt:"Dumbbell RDL"},
+ {id:"deadlift",video:"assets/exercises/deadlift.mp4",name:"Conventional Deadlift",group:"Legs",equipment:"Barbell",art:"deadlift",steps:["Stand with mid-foot under the bar.","Grip the bar and bring shins close.","Brace, keep the bar close, and push the floor away.","Stand tall, then return the bar with control."],mistakes:["Jerking the bar from the floor","Rounded back","Hyperextending at the top"],alt:"Trap-bar deadlift"},
+ {id:"lunge",video:"assets/exercises/lunge.mp4",name:"Walking Lunge",group:"Legs",equipment:"Bodyweight / dumbbells",art:"lunge",steps:["Take a controlled step forward.","Lower until both knees are comfortably bent.","Keep front knee tracking over the toes.","Push through the front foot and step into the next rep."],mistakes:["Very short steps","Knee collapsing inward","Losing balance from rushing"],alt:"Reverse lunge"},
+ {id:"hip-thrust",video:"assets/exercises/hip-thrust.mp4",name:"Hip Thrust",group:"Legs",equipment:"Bench + barbell",art:"hipthrust",steps:["Place upper back against a bench and weight over hips.","Plant feet so shins are near vertical at the top.","Drive hips upward by squeezing glutes.","Stop when torso and thighs form a line; lower slowly."],mistakes:["Overarching lower back","Feet too far away","Pushing through toes"],alt:"Glute bridge"},
+ {id:"leg-curl",video:"assets/exercises/leg-curl.mp4",name:"Leg Curl",group:"Legs",equipment:"Machine",art:"legcurl",steps:["Adjust the pad just above the ankles.","Keep hips firmly against the pad.","Curl heels toward the glutes.","Lower slowly to full comfortable extension."],mistakes:["Hips lifting","Using momentum","Cutting the range short"],alt:"Stability-ball hamstring curl"},
+ {id:"leg-extension",video:"assets/exercises/leg-extension.mp4",name:"Leg Extension",group:"Legs",equipment:"Machine",art:"legext",steps:["Align knees with the machine pivot.","Place the pad above the ankles.","Extend knees smoothly until legs are nearly straight.","Lower under control."],mistakes:["Seat poorly adjusted","Kicking the weight","Using excessive load"],alt:"Split squat"},
+ {id:"calf",video:"assets/exercises/calf.mp4",name:"Standing Calf Raise",group:"Legs",equipment:"Machine / dumbbells",art:"calf",steps:["Stand tall with the balls of your feet supported.","Lower heels into a comfortable stretch.","Rise as high as possible onto the toes.","Pause briefly, then lower slowly."],mistakes:["Bouncing","Tiny range of motion","Rolling ankles outward"],alt:"Seated calf raise"},
+ {id:"curl",video:"assets/exercises/curl.mp4",name:"Dumbbell Biceps Curl",group:"Arms",equipment:"Dumbbells",art:"curl",steps:["Stand tall with arms at your sides.","Keep elbows close to the torso.","Curl the dumbbells without swinging.","Lower fully under control."],mistakes:["Swinging the hips","Elbows drifting far forward","Dropping the weight"],alt:"Cable curl"},
+ {id:"hammer",video:"assets/exercises/hammer.mp4",name:"Hammer Curl",group:"Arms",equipment:"Dumbbells",art:"hammer",steps:["Hold dumbbells with palms facing each other.","Keep elbows by your sides.","Curl toward the shoulders while keeping neutral wrists.","Lower slowly."],mistakes:["Swinging","Bending wrists","Moving elbows forward"],alt:"Rope cable curl"},
+ {id:"tricep",video:"assets/exercises/tricep.mp4",name:"Triceps Pushdown",group:"Arms",equipment:"Cable machine",art:"pushdown",steps:["Set a bar or rope around chest height.","Pin elbows near your sides.","Extend the elbows until arms are straight.","Return slowly without letting elbows drift forward."],mistakes:["Using the shoulders","Leaning heavily over the cable","Partial reps"],alt:"Close-grip push-up"},
+ {id:"overhead-tri",video:"assets/exercises/overhead-tri.mp4",name:"Overhead Triceps Extension",group:"Arms",equipment:"Cable / dumbbell",art:"overheadtri",steps:["Hold the weight overhead with elbows pointing forward.","Lower behind the head by bending only the elbows.","Extend the elbows to raise the weight.","Keep the ribs down and core braced."],mistakes:["Elbows flaring wide","Overarching the back","Going too heavy"],alt:"Triceps pushdown"},
+ {id:"plank",video:"assets/exercises/plank.mp4",name:"Plank",group:"Core",equipment:"Bodyweight",art:"plank",steps:["Place elbows under shoulders.","Create a straight line from head to heels.","Brace abs and squeeze glutes.","Breathe normally while holding position."],mistakes:["Hips sagging","Hips too high","Holding the breath"],alt:"Knee plank"},
+ {id:"crunch",video:"assets/exercises/crunch.mp4",name:"Cable Crunch",group:"Core",equipment:"Cable + rope",art:"crunch",steps:["Kneel facing the cable with rope by the head.","Keep hips mostly fixed.","Curl ribs toward the pelvis using the abs.","Return slowly without pulling with the arms."],mistakes:["Hinging mostly at the hips","Pulling with arms","Using momentum"],alt:"Floor crunch"},
+ {id:"pushup",video:"assets/exercises/pushup.mp4",name:"Push-Up",group:"Chest",equipment:"Bodyweight",art:"pushup",steps:["Place hands slightly wider than shoulders.","Keep body in one straight line.","Lower chest toward the floor with elbows angled back.","Press the floor away to return."],mistakes:["Sagging hips","Elbows flared 90°","Head reaching forward"],alt:"Incline push-up"},
+ {id:"treadmill",video:"assets/exercises/treadmill.mp4",name:"Treadmill Walk / Run",group:"Cardio",equipment:"Treadmill",art:"cardio",steps:["Start at an easy speed and warm up.","Stand tall and let arms swing naturally.","Choose a sustainable pace or interval pattern.","Cool down gradually before stopping."],mistakes:["Holding the rails continuously","Starting too fast","Skipping warm-up"],alt:"Outdoor walk / run"},
+ {id:"bike",video:"assets/exercises/bike.mp4",name:"Stationary Bike",group:"Cardio",equipment:"Exercise bike",art:"bike",steps:["Set the seat so the knee keeps a slight bend at the bottom.","Start with easy resistance.","Pedal smoothly while keeping the upper body relaxed.","Increase resistance or cadence gradually."],mistakes:["Seat too low","Bouncing in the saddle","Too much resistance too soon"],alt:"Elliptical"}
+];
+const EX_GROUPS=["All","Chest","Back","Shoulders","Legs","Arms","Core","Cardio"];
+let exFilter="All",exSelected=null;
+function motionType(type){
+ if(["bench","incline","press","pushup"].includes(type))return "press";
+ if(["pulldown","pullup"].includes(type))return "verticalpull";
+ if(["row","hingerow"].includes(type))return "row";
+ if(["squat","lunge"].includes(type))return "squat";
+ if(["hinge","deadlift"].includes(type))return "hinge";
+ if(type==="legpress")return "legpress";
+ if(type==="hipthrust")return "hipthrust";
+ if(["legcurl","legext","calf"].includes(type))return type;
+ if(["shoulder","lateral","reardelt","fly","facepull"].includes(type))return "raise";
+ if(["curl","hammer"].includes(type))return "curl";
+ if(["tricep","pushdown","overheadtri"].includes(type))return "tricep";
+ if(type==="plank")return "plank";
+ if(type==="crunch")return "crunch";
+ if(type==="bike")return "bike";
+ if(type==="cardio")return "cardio";
+ return "basic";
+}
+function exDemoSvg(type,large=false){
+ const m=motionType(type), stroke=large?7:5, dur=large?"2.4s":"2.1s";
+ const line=(x1,y1,x2,y2,w=stroke,c="#fff")=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+ const circle=(cx,cy,r,fill="none",c="#fff",w=stroke)=>`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${c}" stroke-width="${w}"/>`;
+ const plate=(x,y,w,h,r=14,fill="rgba(255,255,255,.07)")=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${fill}"/>`;
+ let inner='';
+ if(m==="press"){
+   inner=`${plate(36,83,104,11,8,'rgba(255,255,255,.18)')}${line(46,94,46,113,4,'rgba(255,255,255,.3)')}${line(126,94,126,113,4,'rgba(255,255,255,.3)')}${circle(82,62,10)}${line(82,72,65,92)}${line(65,92,109,92)}${line(65,92,55,117)}${line(109,92,121,116)}<g>${line(65,82,50,72)}${line(109,82,124,72)}${line(38,72,136,72,4,'#f8c76a')}${line(28,72,38,72,7,'#f8c76a')}${line(136,72,146,72,7,'#f8c76a')}<animateTransform attributeName="transform" type="translate" values="0 0;0 -14;0 0" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="verticalpull"){
+   inner=`${line(34,26,146,26,6,'rgba(255,255,255,.38)')}<g>${circle(89,56,10)}${line(89,66,89,105)}${line(89,79,68,43)}${line(89,79,111,43)}${line(89,105,73,131)}${line(89,105,105,131)}<animateTransform attributeName="transform" type="translate" values="0 0;0 10;0 0" dur="${dur}" repeatCount="indefinite"/></g><g>${line(68,43,68,27,4,'#f8c76a')}${line(111,43,111,27,4,'#f8c76a')}<animateTransform attributeName="transform" type="translate" values="0 0;0 10;0 0" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="row"){
+   inner=`${line(18,88,156,88,3,'rgba(255,255,255,.16)')}<g>${circle(63,49,10)}${line(63,59,53,92)}${line(53,92,95,96)}${line(53,92,47,126)}${line(53,92,75,126)}${line(70,71,110,74)}${line(110,74,131,74,4,'#8ed0ff')}<animateTransform attributeName="transform" type="translate" values="0 0;12 0;0 0" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="squat"){
+   inner=`${line(38,42,136,42,5,'#f8c76a')}<g>${circle(87,36,10)}${line(87,46,86,81)}${line(86,56,56,61)}${line(86,56,118,61)}${line(86,81,64,102)}${line(64,102,55,126)}${line(86,81,111,100)}${line(111,100,119,126)}<animateTransform attributeName="transform" type="translate" values="0 0;0 10;0 0" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="hinge"){
+   inner=`${line(20,104,154,104,3,'rgba(255,255,255,.16)')}<g>${circle(67,45,10)}${line(67,55,55,82)}${line(55,82,96,90)}${line(55,82,50,122)}${line(55,82,79,122)}${line(72,68,117,90)}${line(33,92,131,92,5,'#f8c76a')}<animateTransform attributeName="transform" type="translate" values="0 0;0 8;0 0" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="legpress"){
+   inner=`${line(28,122,81,67,8,'rgba(255,255,255,.22)')}${circle(99,55,10)}${line(99,65,90,90)}${line(90,90,118,95)}${line(118,95,143,83)}${line(118,95,136,122)}<g>${plate(133,58,18,50,6,'rgba(255,255,255,.18)')}${line(133,59,150,59,4,'#8ed0ff')}<animateTransform attributeName="transform" type="translate" values="0 0;-13 13;0 0" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="hipthrust"){
+   inner=`${plate(24,89,58,11,8,'rgba(255,255,255,.2)')}<g>${circle(78,68,10)}${line(78,78,69,101)}${line(69,101,109,101)}${line(109,101,132,84)}${line(109,101,86,124)}${line(52,91,70,101)}<animateTransform attributeName="transform" type="translate" values="0 6;0 -8;0 6" dur="${dur}" repeatCount="indefinite"/></g><g>${line(51,91,123,91,7,'#f8c76a')}<animateTransform attributeName="transform" type="translate" values="0 6;0 -8;0 6" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="legcurl"){
+   inner=`${plate(26,88,70,12,8,'rgba(255,255,255,.2)')}${circle(84,70,10)}${line(84,80,76,101)}${line(76,101,102,101)}${line(76,101,54,101)}<g>${line(102,101,127,110)}<animateTransform attributeName="transform" type="rotate" values="0 102 101;-40 102 101;0 102 101" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="legext"){
+   inner=`${plate(24,88,58,12,8,'rgba(255,255,255,.2)')}${circle(74,68,10)}${line(74,78,67,101)}${line(67,101,91,101)}${line(67,101,47,101)}<g>${line(91,101,126,101)}<animateTransform attributeName="transform" type="rotate" values="-35 91 101;0 91 101;-35 91 101" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="calf"){
+   inner=`${line(40,123,132,123,4,'rgba(255,255,255,.16)')}<g>${circle(88,46,10)}${line(88,56,88,94)}${line(88,73,118,73)}${line(88,94,75,123)}${line(88,94,102,119)}<animateTransform attributeName="transform" type="translate" values="0 6;0 0;0 6" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="raise"){
+   inner=`<g>${circle(88,40,10)}${line(88,50,88,89)}${line(88,67,58,79)}${line(88,67,118,79)}${line(88,89,73,122)}${line(88,89,103,122)}<animateTransform attributeName="transform" type="translate" values="0 0;0 -2;0 0" dur="${dur}" repeatCount="indefinite"/></g><g>${line(58,79,44,44)}${line(118,79,132,44)}<animateTransform attributeName="transform" type="rotate" values="0 88 67;-18 88 67;0 88 67" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="curl"){
+   inner=`${circle(88,40,10)}${line(88,50,88,88)}${line(88,88,74,122)}${line(88,88,103,122)}${line(88,67,66,81)}${line(88,67,109,81)}<g>${line(66,81,75,54)}${line(109,81,100,54)}<animateTransform attributeName="transform" type="rotate" values="0 66 81;-36 66 81;0 66 81" dur="${dur}" repeatCount="indefinite"/></g><g>${line(109,81,100,54)}<animateTransform attributeName="transform" type="rotate" values="0 109 81;36 109 81;0 109 81" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="tricep"){
+   inner=`${circle(88,40,10)}${line(88,50,88,88)}${line(88,88,74,122)}${line(88,88,103,122)}${line(88,67,68,62)}${line(88,67,108,62)}<g>${line(68,62,73,34)}${line(108,62,103,34)}<animateTransform attributeName="transform" type="rotate" values="22 68 62;0 68 62;22 68 62" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="plank"){
+   inner=`<g>${circle(58,54,9)}${line(66,58,105,72)}${line(105,72,130,83)}${line(105,72,84,91)}${line(84,91,66,118)}${line(130,83,144,106)}<animateTransform attributeName="transform" type="translate" values="0 0;0 7;0 0" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="crunch"){
+   inner=`${line(37,121,79,121,7,'rgba(255,255,255,.25)')}<g>${circle(90,62,10)}${line(90,72,80,95)}${line(80,95,97,109)}${line(97,109,118,122)}${line(97,109,76,121)}${line(80,82,63,69)}<animateTransform attributeName="transform" type="rotate" values="0 79 121;-24 79 121;0 79 121" dur="${dur}" repeatCount="indefinite"/></g><g>${line(63,69,62,43,4,'#8ed0ff')}<animateTransform attributeName="transform" type="rotate" values="0 79 121;-24 79 121;0 79 121" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="bike"){
+   inner=`<circle cx="56" cy="108" r="23" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="4"/><circle cx="129" cy="108" r="23" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="4"/>${circle(96,47,9)}${line(96,56,91,79)}${line(91,79,58,108)}${line(91,79,111,79)}${line(111,79,129,108)}${line(58,108,95,108,4,'#8ed0ff')}<g>${line(91,79,73,96)}${line(73,96,89,114)}<animateTransform attributeName="transform" type="rotate" values="0 91 79;22 91 79;0 91 79" dur="${dur}" repeatCount="indefinite"/></g><g>${line(91,79,109,94)}${line(109,94,95,114)}<animateTransform attributeName="transform" type="rotate" values="0 91 79;-22 91 79;0 91 79" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else if(m==="cardio"){
+   inner=`${line(18,120,152,120,4,'rgba(255,255,255,.22)')}<g>${circle(86,47,9)}${line(86,56,80,80)}${line(80,80,61,98)}${line(80,80,106,92)}${line(61,98,49,119)}${line(106,92,124,109)}${line(79,67,62,60)}${line(79,67,102,56)}<animateTransform attributeName="transform" type="translate" values="0 0;7 0;0 0" dur="${dur}" repeatCount="indefinite"/></g>`;
+ }else{
+   inner=`${circle(88,40,10)}${line(88,50,88,88)}${line(88,67,65,80)}${line(88,67,111,80)}${line(88,88,73,122)}${line(88,88,103,122)}`;
+ }
+ const label=m==="press"?"press demo":m==="verticalpull"?"pull demo":m==="row"?"row demo":m==="squat"?"squat demo":m==="hinge"?"hinge demo":m==="bike"?"cardio demo":"form demo";
+ return `<svg viewBox="0 0 180 140" role="img" aria-label="Animated exercise demo"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#202020"/><stop offset="100%" stop-color="#111"/></linearGradient></defs><rect x="1" y="1" width="178" height="138" rx="16" fill="url(#g)"/><rect x="1" y="1" width="178" height="138" rx="16" fill="none" stroke="rgba(255,255,255,.08)"/><ellipse cx="94" cy="117" rx="52" ry="10" fill="rgba(255,255,255,.05)"/>${inner}<text x="12" y="18" font-size="9" letter-spacing="1" fill="rgba(255,255,255,.55)" style="text-transform:uppercase">${label}</text></svg>`;
+}
+function exerciseMedia(x,large=false){
+ const cls=large?"exercise-hero-media":"exercise-thumb-media";
+ const fallback=exDemoSvg(x.art,large);
+ if(!x.video)return fallback;
+ return `<video class="${cls}" src="${x.video}" autoplay muted loop playsinline preload="metadata" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"></video><div class="ex-fallback" style="display:none">${fallback}</div>`;
+}
+function renderExerciseLibrary(){
+ if(!$('exGrid'))return;
+ $('exFilters').innerHTML=EX_GROUPS.map(g=>`<button class="${g===exFilter?'on':''}" data-exfilter="${g}">${g}</button>`).join('');
+ const q=($('exSearch').value||'').trim().toLowerCase();
+ const list=EXERCISES.filter(x=>(exFilter==='All'||x.group===exFilter)&&(!q||`${x.name} ${x.group} ${x.equipment}`.toLowerCase().includes(q)));
+ $('exGrid').innerHTML=list.length?list.map(x=>`<button class="ex-card" data-exid="${x.id}"><div class="thumb">${exerciseMedia(x,false)}</div><b>${esc(x.name)}</b><div class="mu">${esc(x.group)} · ${esc(x.equipment)}</div><div class="tiny">Tap to watch the real-person demo and form guide</div></button>`).join(''):'<div class="mu ex-empty">No exercises match that search.</div>';
+}
+function openExercise(id){
+ const x=EXERCISES.find(e=>e.id===id);if(!x)return;exSelected=x;
+ $('exDetailGroup').textContent=x.group;$('exDetailName').textContent=x.name;$('exDetailHero').innerHTML=exerciseMedia(x,true);
+ $('exDetailBody').innerHTML=`<div class="ex-meta"><span>🎯 ${esc(x.group)}</span><span>🏋️ ${esc(x.equipment)}</span><span>🎬 Real-person demo</span></div><div class="section-title">How to do it</div><ol>${x.steps.map(a=>`<li>${esc(a)}</li>`).join('')}</ol><div class="section-title">Common mistakes</div><ul>${x.mistakes.map(a=>`<li>${esc(a)}</li>`).join('')}</ul><div class="section-title">Beginner / alternative option</div><div class="mu">${esc(x.alt)}</div>`;
+ $('exerciseModal').classList.remove('hide');$('exerciseModal').setAttribute('aria-hidden','false');
+}
+function closeExercise(){$('exerciseModal').classList.add('hide');$('exerciseModal').setAttribute('aria-hidden','true')}
+$('exSearch').oninput=renderExerciseLibrary;
+$('exFilters').onclick=e=>{const b=e.target.closest('[data-exfilter]');if(!b)return;exFilter=b.dataset.exfilter;renderExerciseLibrary()};
+$('exGrid').onclick=e=>{const b=e.target.closest('[data-exid]');if(b)openExercise(b.dataset.exid)};
+$('exDetailClose').onclick=closeExercise;
+$('exerciseModal').onclick=e=>{if(e.target===$('exerciseModal'))closeExercise()};
+$('exDetailAdd').onclick=()=>{if(!exSelected)return;addExerciseRow({name:exSelected.name,sets:3,reps:10});closeExercise();$('gymStatus').textContent=`${exSelected.name} added to your workout.`;$('exerciseList').scrollIntoView({behavior:'smooth',block:'center'})};
+
+/* ---------- gym ---------- */
+function addExerciseRow(v={}){gymDraft.push({name:v.name||"",sets:v.sets||3,reps:v.reps||10,weight:v.weight||""});renderGymDraft()}
+function renderGymDraft(){
+ $("exerciseList").innerHTML=gymDraft.length?gymDraft.map((e,i)=>`<div class="exercise-row"><div class="ex-name"><label>Exercise</label><input data-gf="name" data-gi="${i}" value="${esc(e.name)}" placeholder="Bench press"></div><div><label>Sets</label><input data-gf="sets" data-gi="${i}" type="number" inputmode="numeric" value="${e.sets}"></div><div><label>Reps</label><input data-gf="reps" data-gi="${i}" type="number" inputmode="numeric" value="${e.reps}"></div><div><label>kg</label><input data-gf="weight" data-gi="${i}" type="number" inputmode="decimal" value="${e.weight}"></div><button class="sm" data-gdel="${i}">✕</button></div>`).join(""):'<div class="mu" style="padding:8px 0">Add exercises if you want to track sets, reps and weight.</div>';
+}
+$("addExercise").onclick=()=>{$("exerciseLibraryCard").scrollIntoView({behavior:"smooth",block:"start"});$("exSearch").focus()};
+$("exerciseList").oninput=e=>{const i=+e.target.dataset.gi,f=e.target.dataset.gf;if(gymDraft[i]&&f)gymDraft[i][f]=f==="name"?e.target.value:(+e.target.value||0)};
+$("exerciseList").onclick=e=>{const i=e.target.dataset.gdel;if(i!=null){gymDraft.splice(+i,1);renderGymDraft()}};
+$("finishWorkout").onclick=()=>{
+ const duration=+$('gymDur').value||0,type=$('gymType').value,note=$('gymNote').value.trim();
+ const ex=gymDraft.filter(e=>e.name.trim()).map(e=>({name:e.name.trim(),sets:+e.sets||0,reps:+e.reps||0,weight:+e.weight||0}));
+ if(duration<=0&&!ex.length){$("gymStatus").textContent="Add a duration or at least one exercise.";return}
+ workoutDay().push({id:Date.now(),type,duration,note,exercises:ex,loggedAt:new Date().toISOString()});save();
+ $('gymDur').value="";$('gymNote').value="";gymDraft=[];renderGymDraft();$("gymStatus").textContent="Workout saved. Your AI coach can use it when planning the rest of today.";render();
+};
+$("gymHistory").onclick=e=>{const id=+e.target.dataset.wdel;if(!id)return;for(const d of Object.keys(S.workouts)){const i=S.workouts[d].findIndex(w=>w.id===id);if(i>=0){S.workouts[d].splice(i,1);save();render();break}}};
+
+/* ---------- food logging ---------- */
+function showEdit(r={}){$("edit").classList.remove("hide");$("man").classList.add("hide");
+ $("n").value=r.name||"";$("k").value=r.kcal??"";$("pr").value=r.protein_g??"";$("ca").value=r.carbs_g??"";$("fa").value=r.fat_g??"";
+ $("items").textContent=(r.items||[]).map(i=>`${i.item} ~${R(i.grams)}g (${R(i.kcal)} kcal)`).join(" · ")+(r.confidence?` — confidence: ${r.confidence}`:"")+(r.note?` ${r.note}`:"")}
+$("man").onclick=()=>showEdit();
+$("add").onclick=()=>{day().push({n:$("n").value.trim()||"Food",k:+$("k").value||0,p:+$("pr").value||0,c:+$("ca").value||0,f:+$("fa").value||0});save();
+ $("edit").classList.add("hide");$("man").classList.remove("hide");$("desc").value="";$("fix").value="";$("st").textContent="";$("pv").classList.add("hide");$("file").value="";$("cameraFile").value="";img=null;last=null;setScanMode("dish");tab="home";render();scrollTo(0,0)};
+/* ---------- focused camera capture ---------- */
+let camStream=null,camFacing="environment",torchOn=false;
+function camGuideConfig(){
+ if(scanMode==="barcode")return {cls:"barcode",title:"Scan barcode",hint:"Fill the box with ONLY the barcode",note:"Move closer until the bars are sharp",max:1400,q:.82};
+ if(scanMode==="label")return {cls:"label",title:"Scan Nutrition Facts",hint:"Fill the box with the Nutrition Facts panel",note:"Keep the label flat and readable",max:1500,q:.84};
+ return {cls:"dish",title:"Take dish photo",hint:"Keep the meal inside the frame",note:"Hold steady",max:1000,q:.72};
+}
+async function stopCamera(){
+ if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}
+ $("camModal").classList.add("hide");$("camModal").setAttribute("aria-hidden","true");torchOn=false;
+}
+async function startCamera(){
+ const cfg=camGuideConfig();
+ $("camGuide").className=`cam-guide ${cfg.cls}`;$("camTitle").textContent=cfg.title;$("camHint").textContent=cfg.hint;$("camNote").textContent=cfg.note;
+ if(!navigator.mediaDevices?.getUserMedia){$("cameraFile").click();return}
+ try{
+  await stopCamera();
+  $("camModal").classList.remove("hide");$("camModal").setAttribute("aria-hidden","false");
+  camStream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:camFacing},width:{ideal:1920},height:{ideal:1080}}});
+  $("camVideo").srcObject=camStream;await $("camVideo").play();
+  const track=camStream.getVideoTracks()[0];
+  const caps=track.getCapabilities?.()||{};
+  try{if(caps.focusMode?.includes?.("continuous"))await track.applyConstraints({advanced:[{focusMode:"continuous"}]})}catch(_){ }
+  $("camTorch").style.visibility=caps.torch?"visible":"hidden";
+ }catch(e){
+  await stopCamera();$("st").textContent="Camera permission was unavailable. You can take a photo or choose one from your library.";$("cameraFile").click();
+ }
+}
+async function captureFocused(){
+ const v=$("camVideo"),guide=$("camGuide"),stage=$("camStage"),cfg=camGuideConfig();
+ if(!v.videoWidth||!v.videoHeight)return;
+ const vr=stage.getBoundingClientRect(),gr=guide.getBoundingClientRect();
+ const scale=Math.max(vr.width/v.videoWidth,vr.height/v.videoHeight);
+ const shownW=v.videoWidth*scale,shownH=v.videoHeight*scale;
+ const cropLeft=(shownW-vr.width)/2,cropTop=(shownH-vr.height)/2;
+ let sx=(gr.left-vr.left+cropLeft)/scale,sy=(gr.top-vr.top+cropTop)/scale,sw=gr.width/scale,sh=gr.height/scale;
+ sx=Math.max(0,Math.min(v.videoWidth-1,sx));sy=Math.max(0,Math.min(v.videoHeight-1,sy));sw=Math.max(1,Math.min(v.videoWidth-sx,sw));sh=Math.max(1,Math.min(v.videoHeight-sy,sh));
+ const outScale=Math.min(1,cfg.max/Math.max(sw,sh)),c=document.createElement("canvas");
+ c.width=Math.max(1,Math.round(sw*outScale));c.height=Math.max(1,Math.round(sh*outScale));
+ c.getContext("2d").drawImage(v,sx,sy,sw,sh,0,0,c.width,c.height);
+ const u=c.toDataURL("image/jpeg",cfg.q);img=u.split(",")[1];$("pv").src=u;$("pv").classList.remove("hide");
+ await stopCamera();
+ $("st").textContent=scanMode==="barcode"?"Barcode area captured. Tap Scan barcode.":scanMode==="label"?"Nutrition label captured. Tap Read label.":"Dish captured. Tap Estimate dish.";
+}
+$("pb").onclick=startCamera;
+$("gb").onclick=()=>$("file").click();
+$("camClose").onclick=stopCamera;
+$("camCapture").onclick=captureFocused;
+$("camGallery").onclick=async()=>{await stopCamera();$("file").click()};
+$("camFlip").onclick=async()=>{camFacing=camFacing==="environment"?"user":"environment";await startCamera()};
+$("camTorch").onclick=async()=>{const t=camStream?.getVideoTracks?.()[0],caps=t?.getCapabilities?.()||{};if(!caps.torch)return;torchOn=!torchOn;try{await t.applyConstraints({advanced:[{torch:torchOn}]});$("camTorch").textContent=torchOn?"Flash on":"Flash"}catch(_){ }};
+async function loadSelectedPhoto(f){
+ if(!f)return;
+ try{
+  const bm=await createImageBitmap(f),cfg=camGuideConfig(),s=Math.min(1,cfg.max/Math.max(bm.width,bm.height)),c=document.createElement("canvas");
+  c.width=Math.max(1,Math.round(bm.width*s));c.height=Math.max(1,Math.round(bm.height*s));c.getContext("2d").drawImage(bm,0,0,c.width,c.height);
+  const u=c.toDataURL("image/jpeg",cfg.q);img=u.split(",")[1];$("pv").src=u;$("pv").classList.remove("hide");
+  $("st").textContent=scanMode==="barcode"?"Photo selected from your library. Crop/choose a clear barcode photo, then tap Scan barcode.":scanMode==="label"?"Photo selected from your library. Use a clear Nutrition Facts photo, then tap Read label.":"Photo selected from your library. Tap Estimate dish.";
+ }catch(err){$("st").textContent="Could not open that photo. Try another image."}
+}
+$("file").onchange=e=>loadSelectedPhoto(e.target.files?.[0]);
+$("cameraFile").onchange=e=>loadSelectedPhoto(e.target.files?.[0]);
+$("log").onclick=e=>{const i=e.target.dataset.i;if(i!=null){day().splice(+i,1);save();render()}};
+
+/* ---------- steps, weight, settings ---------- */
+$("sts").onclick=()=>{const v=+$("sti").value;if(v>=0&&$("sti").value!==""){S.steps[iso(cur)]=v;$("sti").value="";save();render()}};
+$("ws").onclick=()=>{const v=+$("wi").value;if(v>20){S.weights=S.weights.filter(x=>x.d!==iso(new Date()));S.weights.push({d:iso(new Date()),w:v});S.weights.sort((a,b)=>a.d<b.d?-1:1);$("wi").value="";save();render()}};
+for(const k of["k","p","c","f"])$("g"+k).oninput=e=>{const v=+e.target.value;if(v>0){S.goals[k]=v;save()}};
+$("prefs").oninput=e=>{S.prefs=e.target.value;save()};
+$("sg").oninput=e=>{const v=+e.target.value;if(v>0){S.stepGoal=v;save()}};
+$("sa").onchange=e=>{S.stepAdj=e.target.checked;save()};
+$("nav").onclick=e=>{const b=e.target.closest("button");if(b){tab=b.dataset.t;render();scrollTo(0,0)}};
+$("goLog").onclick=$("goLog2").onclick=()=>{tab="log";render();scrollTo(0,0)};
+$("goMeals").onclick=()=>{tab="meals";render();scrollTo(0,0)};
+$("goGym").onclick=()=>{tab="gym";render();scrollTo(0,0)};
+$("editProfile").onclick=()=>{tab="ob";$("o-res").classList.add("hide");render();scrollTo(0,0)};
+
+/* ---------- render ---------- */
+function render(){
+ for(const t of["ob","home","log","meals","gym","prog","set"])$("v-"+t).classList.toggle("hide",t!==tab);
+ $("nav").classList.toggle("hide",tab==="ob");
+ [...$("nav").children].forEach(b=>b.classList.toggle("on",b.dataset.t===tab));
+ if(tab==="ob"){fillOb();return}
+ const g=S.goals,d=S.days[iso(cur)]||[],t=sum(d),st=S.steps[iso(cur)]||0,burn=S.stepAdj?R(st*.04):0,left=g.k+burn-t.k;
+ if(tab==="home"){
+  const days=[];for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);days.push(x)}
+  $("strip").innerHTML=days.map(x=>`<button data-d="${iso(x)}" class="${iso(x)===iso(cur)?"on":""}">${x.toLocaleDateString(undefined,{weekday:"short"}).slice(0,3)}<b>${x.getDate()}</b></button>`).join("");
+  $("left").textContent=Math.abs(R(left));$("ll").textContent=left>=0?"Calories left":"Calories over";
+  $("cring").innerHTML=ring(t.k/(g.k+burn),96,9,left<0?"var(--p)":"var(--ac)",`<span style="font-size:20px">🔥</span>`);
+  $("macs").innerHTML=[["Protein left","p","--p"],["Carbs left","c","--c"],["Fat left","f","--f"]].map(([n,k,c])=>`<div class="card"><b>${R(g[k]-t[k])}g</b><div class="mu" style="margin-bottom:6px">${n}</div>${ring(t[k]/g[k],56,6,`var(${c})`,`<span style="font-size:11px">${R(t[k]/g[k]*100)}%</span>`)}</div>`).join("");
+  $("stv").textContent=st.toLocaleString();$("stg").textContent="/ "+S.stepGoal.toLocaleString()+(burn?` · +${burn} kcal`:"");$("stb").style.width=Math.min(100,st/S.stepGoal*100)+"%";
+  const pl=S.plan[iso(cur)]||[];
+  $("plist").innerHTML=pl.map((m,i)=>`<div class="item"><span class="tag">${esc(m.slot)} · ${esc(m.time||"")}</span><div class="row"><b>${esc(m.name)}</b><button class="sm pri" data-l="${i}">Log</button></div><div class="mu">${esc(m.desc)}</div><div class="mu">${R(m.kcal)} kcal · P${R(m.protein_g)} C${R(m.carbs_g)} F${R(m.fat_g)}</div></div>`).join("");
+  $("plan").textContent=pl.length?"Re-plan my remaining meals":"Plan my remaining meals";
+  const tm=S.tailored[iso(cur)];
+  if(tm){
+    $("tailorOut").innerHTML=`<div class="item"><span class="tag">Custom dish</span><div class="row"><b>${esc(tm.name)}</b></div><div class="mu">${esc(tm.desc||"")}</div><div class="mu" style="margin-top:4px">${R(tm.kcal)} kcal · P${R(tm.protein_g)} C${R(tm.carbs_g)} F${R(tm.fat_g)}</div><div class="row" style="margin-top:10px"><button data-recipe="1">View recipe</button><button class="pri" data-tailorlog="1">Log meal</button></div></div>`;
+  } else $("tailorOut").innerHTML="";
+  $("log").innerHTML=d.length?d.map((m,i)=>`<div class="item row"><div>${esc(m.n)}<br><span class="mu">${R(m.k)} kcal · P${R(m.p)} C${R(m.c)} F${R(m.f)}</span></div><button class="sm" data-i="${i}">✕</button></div>`).join(""):'<div class="mu">Nothing logged yet.</div>';
+  const fx=S.coach[iso(cur)];
+  if(fx){const acts=(fx.actions||[]).map(a=>`<div class="coach-action"><b>${esc(a.title||"")}</b><div class="mu">${esc(a.detail||"")}</div></div>`).join("");const meal=fx.meal||null;$("fixOut").innerHTML=`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--bd)"><b style="font-size:17px">${esc(fx.headline||"Your next best moves")}</b><div class="mu" style="margin:5px 0 8px">${esc(fx.summary||"")}</div>${acts}${meal?`<div class="coach-action"><b>🍽 ${esc(meal.name||"Meal idea")}</b><div class="mu">${esc(meal.desc||"")}</div><div class="mu">${R(meal.kcal||0)} kcal · P${R(meal.protein_g||0)} C${R(meal.carbs_g||0)} F${R(meal.fat_g||0)}</div><button class="sm pri" data-coachmeal="${esc(meal.name||meal.desc||"")}" style="margin-top:7px">Build this dish</button></div>`:""}</div>`}else $("fixOut").innerHTML="";
+ }
+ if(tab==="meals"){
+  const pl=S.plan[iso(cur)]||[];
+  $("plist").innerHTML=pl.map((m,i)=>`<div class="item"><span class="tag">${esc(m.slot)} · ${esc(m.time||"")}</span><div class="row"><b>${esc(m.name)}</b><button class="sm pri" data-l="${i}">Log</button></div><div class="mu">${esc(m.desc)}</div><div class="mu">${R(m.kcal)} kcal · P${R(m.protein_g)} C${R(m.carbs_g)} F${R(m.fat_g)}</div></div>`).join("");
+  $("plan").textContent=pl.length?"Re-plan my remaining meals":"Plan my remaining meals";
+  const tm=S.tailored[iso(cur)];
+  if(tm)$("tailorOut").innerHTML=`<div class="item"><span class="tag">Custom dish</span><div class="row"><b>${esc(tm.name)}</b></div><div class="mu">${esc(tm.desc||"")}</div><div class="mu" style="margin-top:4px">${R(tm.kcal)} kcal · P${R(tm.protein_g)} C${R(tm.carbs_g)} F${R(tm.fat_g)}</div><div class="row" style="margin-top:10px"><button data-recipe="1">View recipe</button><button class="pri" data-tailorlog="1">Log meal</button></div></div>`; else $("tailorOut").innerHTML="";
+ }
+ if(tab==="gym"){
+  renderExerciseLibrary();
+  const today=S.workouts[iso(cur)]||[];
+  if(today.length){const mins=today.reduce((a,w)=>a+(+w.duration||0),0),sets=today.reduce((a,w)=>a+(w.exercises||[]).reduce((x,e)=>x+(+e.sets||0),0),0);$("gymTodayTitle").textContent=today.map(w=>w.type).join(" + ");$("gymTodayTag").textContent=`${mins} min`;$("gymToday").textContent=`${sets} tracked sets${today.some(w=>w.note)?" · "+today.map(w=>w.note).filter(Boolean).join(" · "):""}`}
+  else{$("gymTodayTitle").textContent="No workout logged";$("gymTodayTag").textContent="Rest day";$("gymToday").textContent="Log your gym session and the AI coach will use it when planning the rest of your day."}
+  renderGymDraft();
+  const all=Object.entries(S.workouts||{}).flatMap(([date,a])=>(a||[]).map(w=>({...w,date}))).sort((a,b)=>(b.loggedAt||b.date).localeCompare(a.loggedAt||a.date)).slice(0,8);
+  $("gymHistory").innerHTML=all.length?all.map(w=>{const volume=(w.exercises||[]).reduce((a,e)=>a+(+e.sets||0)*(+e.reps||0)*(+e.weight||0),0);return `<div class="item"><div class="row"><div><b>${esc(w.type)}</b><div class="mu">${new Date(w.date+"T12:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric"})} · ${w.duration||0} min · ${(w.exercises||[]).length} exercises${volume?` · ${R(volume).toLocaleString()} kg volume`:""}</div></div><button class="sm" data-wdel="${w.id}">✕</button></div>${(w.exercises||[]).length?`<div style="margin-top:6px">${w.exercises.map(e=>`<span class="workout-pill">${esc(e.name)} ${e.sets}×${e.reps}${e.weight?` @ ${e.weight}kg`:""}</span>`).join("")}</div>`:""}</div>`}).join(""):'<div class="mu">No workouts yet.</div>';
+ }
+ if(tab==="prog"){
+  const W=S.weights,p=S.profile,cw=W.length?W[W.length-1].w:p.w;
+  let svg="";if(W.length>1){const ws=W.slice(-30),mn=Math.min(...ws.map(x=>x.w),p.gw)-1,mx=Math.max(...ws.map(x=>x.w),p.gw)+1;
+   const pt=ws.map((x,i)=>`${i/(ws.length-1)*300},${110-(x.w-mn)/(mx-mn)*100}`).join(" "),gy=110-(p.gw-mn)/(mx-mn)*100;
+   svg=`<svg viewBox="0 0 300 120" style="width:100%;margin-top:10px"><line x1="0" x2="300" y1="${gy}" y2="${gy}" stroke="var(--g)" stroke-dasharray="4"/><polyline points="${pt}" fill="none" stroke="var(--ac)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="mu">Green dashed line = goal (${p.gw} kg)</div>`}
+  const togo=Math.abs(cw-p.gw),pct=p.goal==="maintain"?1:Math.max(0,Math.min(1,1-togo/Math.max(.1,Math.abs(p.w-p.gw))));
+  $("pcard").innerHTML=`<div class="row"><div><div class="mu">Current weight</div><b style="font-size:32px">${cw} kg</b><div class="mu">Goal ${p.gw} kg · ${p.goal==="maintain"?"maintaining":R(togo*10)/10+" kg to go"}</div></div>${ring(pct,84,9,"var(--g)",`<b>${R(pct*100)}%</b>`)}</div>${svg}`;
+  const H=[];for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);H.push([x,sum(S.days[iso(x)]||[]).k])}
+  const mx=Math.max(g.k,...H.map(h=>h[1]));
+  $("hist").innerHTML=H.map(([x,k])=>`<div><i class="${k>g.k?"o":""}" style="height:${k/mx*52}px"></i>${x.toLocaleDateString(undefined,{weekday:"narrow"})}</div>`).join("");
+  const vals=[];let wkCount=0;for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);const key=iso(x),tt=sum(S.days[key]||[]);vals.push({k:tt.k,p:tt.p,s:S.steps[key]||0});wkCount+=(S.workouts[key]||[]).length}
+  const avg=a=>R(a.reduce((z,v)=>z+v,0)/a.length);$("weekly").innerHTML=`<div class="g4"><div><b>${avg(vals.map(v=>v.k))}</b><div class="mu">avg kcal</div></div><div><b>${avg(vals.map(v=>v.p))}g</b><div class="mu">avg protein</div></div><div><b>${avg(vals.map(v=>v.s)).toLocaleString()}</b><div class="mu">avg steps</div></div><div><b>${wkCount}</b><div class="mu">workouts</div></div></div>`;
+ }
+ if(tab==="set"){
+  for(const k of["k","p","c","f"])$("g"+k).value=g[k];$("prefs").value=S.prefs;$("sg").value=S.stepGoal;$("sa").checked=S.stepAdj;
+  const p=S.profile||{};$("profileSummary").innerHTML=`${p.age||"—"} years · ${p.sex==="m"?"Male":p.sex==="f"?"Female":"—"} · ${p.h||"—"} cm · ${p.w||"—"} kg<br>Goal: ${p.goal||"—"}${p.gw?` · target ${p.gw} kg`:""}`;
+ }
+}
+$("strip").onclick=e=>{const b=e.target.closest("button");if(b){cur=new Date(b.dataset.d+"T12:00:00");render()}};
+if("serviceWorker"in navigator){
+ navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"}).then(reg=>{reg.update();setInterval(()=>reg.update(),60*60*1000)});
+ navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!sessionStorage.getItem("macros-sw-reloaded")){sessionStorage.setItem("macros-sw-reloaded","1");location.reload()}});
+}
+async function boot(){
+ const dbState=await idbGet();
+ // Use the newest valid copy. This also restores the profile if Safari ever
+ // starts without the localStorage copy available.
+ if(dbState&&typeof dbState==="object"&&(+dbState._updatedAt||0)>(+S._updatedAt||0)){
+  S=Object.assign(defaults(),dbState);
+ }
+ if(!S.profile){
+  try{const p=JSON.parse(localStorage.getItem(PROFILE_KEY)||"null");if(p)S.profile=p}catch(e){}
+ }
+ tab=S.profile?"home":"ob";
+ render();
+}
+boot();
+</script></body></html>
